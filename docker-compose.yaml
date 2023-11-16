@@ -1,0 +1,20 @@
+version: "3.5"
+services:
+
+  db:
+    image: postgres:latest
+    hostname: db
+    environment:
+      POSTGRES_PASSWORD: admin123
+      POSTGRES_USER: user
+      POSTGRES_DB: access_control
+    volumes:
+      - ./src/configuration/db/ddl.sql:/docker-entrypoint-initdb.d/ddl.sql
+      - ./src/configuration/db/postgres.conf:/etc/postgresql/postgresql.conf
+    command: ["postgres", "-c", "config_file=/etc/postgresql/postgresql.conf"]
+    network_mode: host
+    deploy:
+      resources:
+        limits:
+          cpus: "0.8"
+          memory: "2.5GB"
