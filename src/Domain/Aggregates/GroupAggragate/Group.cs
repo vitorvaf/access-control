@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace AccessControl.Domain.Entities;
 
 public class Group
@@ -8,7 +10,7 @@ public class Group
     public Group(string name)
     {
         // Validações para o nome do grupo
-        Name = name;
+        Name = name;        
     }
 
     // Métodos relacionados ao grupo

@@ -9,8 +9,8 @@ services:
       POSTGRES_USER: user
       POSTGRES_DB: access_control
     volumes:
-      - ./src/configuration/db/ddl.sql:/docker-entrypoint-initdb.d/ddl.sql
-      - ./src/configuration/db/postgres.conf:/etc/postgresql/postgresql.conf
+      - ./src/config/db/ddl.sql:/docker-entrypoint-initdb.d/ddl.sql
+      - ./src/config/db/postgres.conf:/etc/postgresql/postgresql.conf
     command: ["postgres", "-c", "config_file=/etc/postgresql/postgresql.conf"]
     network_mode: host
     deploy:
