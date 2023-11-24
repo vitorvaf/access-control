@@ -28,4 +28,12 @@ public class Verification : ValueObject
         ExpiresAt = null;
         VerifiedAt = DateTime.UtcNow;
     }
+
+    protected override IEnumerable<object> GetEqualityComponents()
+    {
+        yield return Code;
+        yield return ExpiresAt;
+        yield return VerifiedAt;
+        yield return IsActive;
+    }
 }

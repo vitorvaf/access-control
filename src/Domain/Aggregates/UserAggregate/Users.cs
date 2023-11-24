@@ -9,7 +9,8 @@ public class User : Entity
 {
     public string Username { get; private set; }
     public EmailAddress Email { get; private set; } // Utilizando o objeto de valor EmailAddress
-    private string _password; // Encapsulamento para segurança
+    public Password Password { get; private set; } = null!;
+    
 
     private readonly List<UserRole> _roles = new List<UserRole>();
     public IReadOnlyCollection<UserRole> Roles => _roles.AsReadOnly();
@@ -24,12 +25,20 @@ public class User : Entity
         SetPassword(password);
     }
 
-    public void SetPassword(string password)
+    public void SetPassword(string plainTextPassword)
     {
-        // Implemente a lógica de hashing e validação de senha
-        _password = password;
+        var password = new Password(plainTextPassword);
+        Password = password;
+        
     }
+    public void UpdatePassword(string plainTextPassword, string code)
+    {
+        if (!string.Equals(code.Trim(), Password.ResetCode.Trim(), StringComparison.CurrentCultureIgnoreCase))
+            throw new Exception("Código de restauração inválido");
 
+        var password = new Password(plainTextPassword);
+        Password = password;
+    }
     public void AddRole(Role role)
     {
         var userRole = new UserRole(this, role);

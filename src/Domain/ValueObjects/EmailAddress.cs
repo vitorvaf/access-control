@@ -45,4 +45,10 @@ public partial class EmailAddress : ValueObject
 
     [GeneratedRegex(Pattern)]
     private static partial Regex EmailRegex();
+
+    protected override IEnumerable<object> GetEqualityComponents()
+    {
+        yield return Address;
+        yield return Verification;
+    }
 }
