@@ -1,4 +1,4 @@
-﻿using AccessControl.Domain.Entities;
+﻿using AccessControl.Domain.Aggregates.GroupAggragate;
 using AccessControl.Domain.SeedWork;
 
 namespace AccessControl.Domain.Aggregates.UserAggregate;

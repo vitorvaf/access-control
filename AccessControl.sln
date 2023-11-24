@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccessControl.Domain", "src
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccessControl.Infrastructure", "src\Infrastructure\AccessControl.Infrastructure.csproj", "{E2F342CA-3A48-4A9A-B051-AAA685D6717E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccessControl.Api", "src\API\AccessControl.Api.csproj", "{8D626250-5515-49F9-BC52-1CDF6EFD2557}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccessControl.Api", "src\Api\AccessControl.Api.csproj", "{8D626250-5515-49F9-BC52-1CDF6EFD2557}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
