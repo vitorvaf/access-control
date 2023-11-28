@@ -1,7 +1,11 @@
-﻿using System.Security.Authentication;
+﻿using System.IdentityModel.Tokens.Jwt;
+using System.Security.Authentication;
+using System.Security.Claims;
+using System.Text;
 using AccessControl.Domain.Aggregates.UserAggregate;
 using AccessControl.Domain.Repositories;
 using AccessControl.Domain.ValueObjects;
+using Microsoft.IdentityModel.Tokens;
 
 namespace AccessControl.Domain.Services;
 
@@ -27,10 +31,14 @@ public class AuthenticationService
         }
 
         // 2. Verificar se a senha está correta
-        if (!VerifyPassword(password, user.Password.Hash))
+        if (!VerifyPassword(user, password))
         {
-            throw new AuthenticationException("Senha incorreta.");
+            throw new AuthenticationException("Usuário ou senha inválidos.");
         }
+
+        // 3. Verifica se a conta esta ativada    
+        if (!user.Email.Verification.IsActive)
+               throw new AuthenticationException("Conta inativa.");
 
         // 3. Gerar token JWT
         var token = GenerateJwtToken(user);
@@ -38,19 +46,54 @@ public class AuthenticationService
         return token;
     }
 
-    private bool VerifyPassword(string providedPassword, string storedHash)
+    private bool VerifyPassword(User user, string password)
     {
-        // Implementar a lógica de verificação de senha
-        return true; // Exemplo
+        if (!user.Password.Challenge(password))
+            return false;
+        
+        return true;
     }
 
     private Token GenerateJwtToken(User user)
     {
-        // Implementar a lógica de geração de token JWT
-        var accessToken = "example_token"; // Exemplo de token gerado
-        var expiry = DateTime.UtcNow.AddHours(1); // Exemplo de data de expiração
+        var handler = new JwtSecurityTokenHandler();
+        var key = Encoding.ASCII.GetBytes(Configuration.Secrets.JwtPrivateKey);
+        var credentials = new SigningCredentials(
+            new SymmetricSecurityKey(key),
+            SecurityAlgorithms.HmacSha256Signature);
 
-        return new Token(accessToken, expiry);
+        var tokenDescriptor = new SecurityTokenDescriptor
+        {
+            Subject = GenerateClaims(user),
+            Expires = DateTime.UtcNow.AddHours(8),
+            SigningCredentials = credentials,
+        };
+        var token = handler.CreateToken(tokenDescriptor);         
+
+        return new Token(handler.WriteToken(token), DateTime.UtcNow.AddHours(8));
+    }
+
+    private static ClaimsIdentity GenerateClaims(User user)
+    {
+        var ci = new ClaimsIdentity();
+        ci.AddClaim(new Claim("id", user.Id.ToString()));
+        ci.AddClaim(new Claim(ClaimTypes.GivenName, user.Username));
+        ci.AddClaim(new Claim(ClaimTypes.Name, user.Email));
+        foreach (var role in user.Roles)
+            ci.AddClaim(new Claim(ClaimTypes.Role, role.Role.Name));
+
+        foreach (var group in user.Groups)
+            ci.AddClaim(new Claim("Group", group.Group.Name));
+
+        foreach (var group in user.Groups)
+            foreach (var module in group.Group.Modules)
+                ci.AddClaim(new Claim("module", module.Module.Name));
+                
+        foreach (var group in user.Groups)
+            foreach (var permission in group.Group.Permissions)
+                ci.AddClaim(new Claim("permission", permission.Permission.Name));
+
+        return ci;
     }
     
 }

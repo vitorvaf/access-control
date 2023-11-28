@@ -1,5 +1,6 @@
 using AccessControl.Domain.Aggregates.GroupAggragate;
 using AccessControl.Domain.Entities;
+using AccessControl.Domain.Exceptions;
 using AccessControl.Domain.SeedWork;
 using AccessControl.Domain.ValueObjects;
 
@@ -8,7 +9,7 @@ namespace AccessControl.Domain.Aggregates.UserAggregate;
 public class User : Entity
 {
     public string Username { get; private set; }
-    public EmailAddress Email { get; private set; } // Utilizando o objeto de valor EmailAddress
+    public EmailAddress Email { get; private set; } 
     public Password Password { get; private set; } = null!;
     
 
@@ -42,6 +43,12 @@ public class User : Entity
     public void AddRole(Role role)
     {
         var userRole = new UserRole(this, role);
+        
+        var roleExists = _roles.Any(r => r.Role == role);
+
+        if(roleExists)
+            throw new DomainException("Permissão já atribuída ao usuário.");
+
         _roles.Add(userRole);
     }
 
@@ -52,12 +59,21 @@ public class User : Entity
         {
             _roles.Remove(userRole);
         }
+        else
+        {
+            throw new DomainException("Permissão não atribuída ao usuário.");
+        }
     }
 
     public void JoinGroup(Group group)
     {
         var userGroup = new UserGroup(this, group);
-        _groups.Add(userGroup);
+        var groupExists = _groups.Any(g => g.Group == group);
+
+        if (groupExists)
+            throw new DomainException("Usuário já está no grupo.");
+
+        _groups.Add(userGroup);                    
     }
 
     public void LeaveGroup(Group group)
@@ -67,7 +83,9 @@ public class User : Entity
         {
             _groups.Remove(userGroup);
         }
-    }
-
-    // Outros métodos e comportamentos relevantes
+        else
+        {
+            throw new DomainException("Usuário não está no grupo.");
+        }
+    }   
 }

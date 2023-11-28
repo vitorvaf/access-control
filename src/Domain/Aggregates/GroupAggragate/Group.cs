@@ -1,4 +1,5 @@
 using AccessControl.Domain.Entities;
+using AccessControl.Domain.Exceptions;
 using AccessControl.Domain.SeedWork;
 
 namespace AccessControl.Domain.Aggregates.GroupAggragate;
@@ -21,6 +22,13 @@ public class Group : Entity
     public void AddModule(Module module)
     {
         var groupModule = new GroupModule(this, module);
+        var goupModuleExists = _modules.Any(m => m.Module == module);
+
+        if (goupModuleExists)
+        {
+            throw new DomainException($"O módulo {module.Name} já está associado ao grupo {Name}");
+        }
+
         _modules.Add(groupModule);
     }
 
@@ -31,11 +39,22 @@ public class Group : Entity
         {
             _modules.Remove(groupModule);
         }
+        else
+        {
+            throw new DomainException($"O módulo {module.Name} não está associado ao grupo {Name}");
+        }
     }
 
     public void AddPermission(Permission permission)
     {
         var groupPermission = new GroupPermission(this, permission);
+        var groupPermissionExists = _permissions.Any(p => p.Permission == permission);
+
+        if(groupPermissionExists)
+        {
+            throw new DomainException($"A permissão {permission.Name} já está associada ao grupo {Name}.");
+        }
+
         _permissions.Add(groupPermission);
     }
 
@@ -45,6 +64,10 @@ public class Group : Entity
         if (groupPermission != null)
         {
             _permissions.Remove(groupPermission);
+        }
+        else
+        {
+            throw new DomainException($"A permissão {permission.Name} não está associada ao grupo {Name}.");
         }
     }
 

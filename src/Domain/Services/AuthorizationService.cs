@@ -23,8 +23,8 @@ public class AuthorizationService
         }
 
         // 2. Verificar se o usuário tem a permissão necessária
-        return true; //user.Groups.Any(g => g.Permissions.Any(p => p.Name == permission));
+        return user.Groups
+            .Any(g => g.Group.Permissions.Any(p => p.Permission.Name == permission));
     }
-
-    // Outros métodos relacionados à autorização
+    
 }
