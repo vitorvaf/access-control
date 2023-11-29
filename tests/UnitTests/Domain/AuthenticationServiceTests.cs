@@ -78,25 +78,22 @@ public class AuthenticationServiceTests
     }
 
     private User CreateValidUser()
-    {
-        var validUserId = Guid.NewGuid();
+    {        
         var validUsername = "validUsername";
         var validPassword = "validPassword"; // Supondo que a senha já esteja devidamente hash e salva
-        var validEmail = "valid@example.com";
-        var isActive = true;
+        var validEmail = new EmailAddress("valid@example.com");
+        validEmail.Verification.Verify(validEmail.Verification.Code); // Supondo que o e-mail já esteja devidamente verificado        
 
         var user = new User(validUsername,validEmail,validPassword);        
-
         return user;
     }
 
     private User CreateInactiveUser()
     {
-        var inactiveUserId = Guid.NewGuid();
+        
         var inactiveUsername = "inactiveUsername";
         var inactivePassword = "password"; // Supondo que a senha já esteja devidamente hash e salva
-        var inactiveEmail = "inactive@example.com";
-        var isActive = false; // Conta inativa
+        var inactiveEmail = "inactive@example.com";        
 
         var user = new User(inactiveUsername,inactiveEmail,inactivePassword);        
 

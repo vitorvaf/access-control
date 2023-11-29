@@ -25,8 +25,8 @@ public static class Configuration
     
     public class SecretsConfiguration
     {
-        public string ApiKey { get; set; } = string.Empty;
-        public string JwtPrivateKey { get; set; } = string.Empty;
-        public string PasswordSaltKey { get; set; } = string.Empty;
+        public string ApiKey { get; set; } = "getApiKey";//string.Empty;
+        public string JwtPrivateKey { get; set; } = "getJwtPrivateKey43443FDFDF34DF34343fdf344SDFSDFSDFSDFSDF4545354345SDFGDFGDFGDFGdffgfdGDFGDGR%";//string.Empty;
+        public string PasswordSaltKey { get; set; } = "getPasswordSaltKey";//string.Empty;
     }
 }
