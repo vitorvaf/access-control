@@ -2,7 +2,7 @@
 
 namespace AccessControl.Domain;
 
-public class AuthorizationService
+public class AuthorizationService : IAuthorizationService
 {
     private readonly IUserRepository _userRepository;
     // Incluir dependências para verificação de permissões

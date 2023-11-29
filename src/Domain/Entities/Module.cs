@@ -14,6 +14,5 @@ public class Module
         Description = description;
         ParentModuleId = parentModuleId;
     }
-
-    // Métodos relacionados ao módulo
+    
 }

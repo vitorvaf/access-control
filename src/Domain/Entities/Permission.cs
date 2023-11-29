@@ -11,7 +11,5 @@ public class Permission
         // Validações para a permissão
         Name = name;
         Description = description;
-    }
-
-    // Métodos relacionados à permissão
+    }    
 }

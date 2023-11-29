@@ -9,7 +9,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace AccessControl.Domain.Services;
 
-public class AuthenticationService
+public class AuthenticationService : IAuthenticationService
 {
     private readonly IUserRepository _userRepository;
     // Incluir dependências para hashing de senha, geração de token, etc.
